@@ -1,17 +1,21 @@
-# WA Blast
+# WA Blast - MBG Data
 
 Kirim pesan WhatsApp satu per satu via wa.me dari data Excel.
 
-**Cara pakai:**
-1. Buka https://fariqsalafy.github.io/wa-blast
-2. Upload file Excel (minimal kolom: NAMA SISWA, No. Telp)
-3. Atur template pesan (gunakan `{{nama}}`, `{{sekolah}}`)
-4. Klik nama → WA terbuka → pesan terisi → Send
+**Data:** 137 kontak siswa MBG (Makan Bergizi Gratis) sudah ter-embed.
 
-**Fitur:**
-- Upload Excel langsung di browser (client-side, via SheetJS)
-- Drag & drop
-- Cari nama
-- Template dengan variable `{{nama}}` `{{sekolah}}`
-- Dark theme
-- Aman: WA manual, tidak terblokir
+## Cara Pakai
+
+1. Buka https://fariqsalafy.github.io/wa-blast
+2. Data sudah otomatis ter-load (137 kontak)
+3. Edit template pesan sesuai kebutuhan
+4. Klik nama siswa -> WA terbuka -> pesan terisi -> Send
+
+Atau upload file Excel lain jika data berbeda.
+
+## Fitur
+
+- Data langsung ada, tinggal buka
+- Upload Excel alternatif jika mau ganti data
+- Search cepat, dark theme
+- Pakai wa.me -> aman dari blokir
