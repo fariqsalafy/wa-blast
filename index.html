@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WA Blast — @belajarduluaja.id</title>
-<!-- SheetJS for reading Excel -->
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<title>WA Blast — Update Identitas Rapor</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   
@@ -20,6 +18,7 @@
     --gold: #FFD54F;
     --red: #FF6B6B;
     --green: #4CAF50;
+    --green-dim: rgba(76,175,80,0.12);
   }
 
   body {
@@ -42,7 +41,7 @@
   header {
     text-align: center;
     padding: 30px 0;
-    border-bottom: 1px solid rgba(0,229,255,0.08);
+    border-bottom: 1px solid var(--cyan-dim);
     margin-bottom: 25px;
   }
   header h1 {
@@ -55,50 +54,6 @@
     color: var(--text-dim);
     font-size: 13px;
     margin-top: 6px;
-  }
-
-  /* Upload section */
-  .upload-section {
-    background: var(--navy2);
-    border: 1px dashed rgba(0,229,255,0.2);
-    border-radius: 12px;
-    padding: 35px 20px;
-    text-align: center;
-    margin-bottom: 20px;
-    transition: all .3s;
-  }
-  .upload-section.dragover {
-    border-color: var(--cyan);
-    background: rgba(0,229,255,0.05);
-  }
-  .upload-section label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 24px;
-    background: var(--cyan);
-    color: var(--navy);
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .upload-section label:hover {
-    background: #33EAFF;
-    transform: translateY(-1px);
-  }
-  .upload-section input[type="file"] { display: none; }
-  .upload-section .info-text {
-    color: var(--text-dim);
-    font-size: 12px;
-    margin-top: 10px;
-  }
-  .upload-section .preview-data {
-    margin-top: 12px;
-    font-size: 12px;
-    color: var(--cyan);
-    opacity: 0.6;
   }
 
   /* Message Template */
@@ -150,6 +105,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
     padding: 12px 20px;
     background: var(--navy2);
     border-radius: 10px;
@@ -157,12 +114,15 @@
     border: 1px solid rgba(0,229,255,0.06);
   }
   .stats-bar .count {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-dim);
   }
   .stats-bar .count strong {
     color: var(--cyan);
     font-weight: 600;
+  }
+  .stats-bar .count .sent-count {
+    color: var(--green);
   }
   .stats-bar .search-box {
     display: flex;
@@ -185,11 +145,26 @@
     color: var(--text-dim);
     font-size: 12px;
   }
+  .stats-bar .reset-btn {
+    font-size: 11px;
+    background: none;
+    border: 1px solid rgba(255,107,107,0.2);
+    color: var(--text-dim);
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .stats-bar .reset-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(255,107,107,0.05);
+  }
 
   /* Contact grid */
   .contact-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 12px;
     padding-bottom: 40px;
   }
@@ -198,12 +173,8 @@
     background: var(--navy2);
     border: 1px solid rgba(0,229,255,0.06);
     border-radius: 12px;
-    padding: 16px 18px;
-    cursor: pointer;
+    padding: 14px 16px;
     transition: all .25s;
-    display: flex;
-    align-items: center;
-    gap: 14px;
     position: relative;
     overflow: hidden;
   }
@@ -220,28 +191,43 @@
   .contact-card:hover {
     border-color: rgba(0,229,255,0.25);
     background: var(--navy3);
-    transform: translateY(-2px);
   }
   .contact-card:hover::before {
     opacity: 0.6;
   }
-  .contact-card:active {
-    transform: translateY(0);
+  .contact-card.sent {
+    border-color: rgba(76,175,80,0.2);
+    background: rgba(76,175,80,0.03);
+  }
+  .contact-card.sent::before {
+    background: var(--green);
+    opacity: 0.5;
   }
 
+  .contact-card .top-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
   .contact-card .avatar {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: var(--cyan-dim);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--cyan);
     flex-shrink: 0;
     border: 1px solid rgba(0,229,255,0.12);
+  }
+  .contact-card.sent .avatar {
+    background: var(--green-dim);
+    color: var(--green);
+    border-color: rgba(76,175,80,0.2);
   }
   .contact-card .info {
     flex: 1;
@@ -250,34 +236,80 @@
   .contact-card .info .name {
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 3px;
-  }
-  .contact-card .info .phone {
-    font-size: 12px;
-    color: var(--text-dim);
+    margin-bottom: 2px;
   }
   .contact-card .info .sekolah {
     font-size: 11px;
     color: var(--cyan);
     opacity: 0.5;
-    margin-top: 2px;
   }
-  .contact-card .wa-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(0,229,255,0.08);
+  .contact-card .info .phone {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+
+  /* Action buttons */
+  .contact-card .actions {
     display: flex;
+    gap: 8px;
     align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: var(--cyan);
-    opacity: 0;
-    transition: opacity .25s;
-    flex-shrink: 0;
+    flex-wrap: wrap;
   }
-  .contact-card:hover .wa-icon {
-    opacity: 0.8;
+  .btn-kirim {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    background: var(--cyan);
+    color: var(--navy);
+    border: none;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-kirim:hover {
+    background: #33EAFF;
+    transform: translateY(-1px);
+  }
+  .btn-kirim:active {
+    transform: translateY(0);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    border: 1px solid transparent;
+    user-select: none;
+  }
+  .status-badge.belum {
+    background: rgba(136,153,176,0.08);
+    color: var(--text-dim);
+    border-color: rgba(136,153,176,0.15);
+  }
+  .status-badge.belum:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-dim);
+  }
+  .status-badge.terkirim {
+    background: var(--green-dim);
+    color: var(--green);
+    border-color: rgba(76,175,80,0.2);
+  }
+  .status-badge.terkirim:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(255,107,107,0.08);
   }
 
   /* Empty state */
@@ -312,23 +344,11 @@
     transition: all .4s;
     backdrop-filter: blur(10px);
     pointer-events: none;
+    white-space: nowrap;
   }
   .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
-  }
-
-  /* Sent counter / history */
-  .sent-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 10px;
-    background: rgba(76,175,80,0.1);
-    color: var(--green);
-    border: 1px solid rgba(76,175,80,0.15);
   }
 
   /* Responsive */
@@ -336,43 +356,42 @@
     .container { padding: 12px; }
     header h1 { font-size: 18px; }
     .contact-grid { grid-template-columns: 1fr; }
-    .stats-bar { flex-direction: column; gap: 10px; }
+    .contact-card .actions { flex-direction: column; align-items: stretch; }
+    .btn-kirim, .status-badge { justify-content: center; }
+    .stats-bar { flex-direction: column; align-items: stretch; }
     .stats-bar .search-box { width: 100%; }
     .stats-bar .search-box input { width: 100%; }
+    .toast { white-space: normal; max-width: 90%; }
   }
 
-  /* Loading */
-  .loading-dots::after {
-    content: '';
-    animation: dots 1.5s steps(4, end) infinite;
+  /* Progress bar */
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--navy);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 6px;
   }
-  @keyframes dots {
-    0% { content: ''; }
-    25% { content: '.'; }
-    50% { content: '..'; }
-    75% { content: '...'; }
+  .progress-bar .fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width 0.3s;
+    width: 0%;
   }
 </style>
 </head>
 <body>
+
 <header>
   <div class="container">
     <h1>📤 WA Blast</h1>
-    <p>Klik nama → otomatis buka WA → pesan terisi → tinggal send</p>
+    <p>Update Identitas Rapor — 137 siswa</p>
   </div>
 </header>
 
 <div class="container">
-  <!-- Upload Excel -->
-  <div class="upload-section" id="dropZone">
-    <label for="fileInput">
-      <span>📁</span> Upload File Excel (.xlsx)
-    </label>
-    <input type="file" id="fileInput" accept=".xlsx,.xls">
-    <div class="info-text">Format: minimal kolom <strong>Nama</strong> & <strong>No HP</strong> (atau <strong>Phone</strong> / <strong>Telepon</strong>)</div>
-    <div class="preview-data" id="previewData"></div>
-  </div>
-
   <!-- Template -->
   <div class="template-section">
     <label for="templateMsg">✏️ Template Pesan</label>
@@ -391,19 +410,23 @@ Maturnuwun 😁
   </div>
 
   <!-- Contacts -->
-  <div class="stats-bar" id="statsBar" style="display:none;">
-    <div class="count">Total: <strong id="totalCount">0</strong> kontak</div>
+  <div class="stats-bar" id="statsBar">
+    <div class="count">
+      Terkirim: <strong class="sent-count" id="sentCount">0</strong> / <strong id="totalCount">0</strong>
+      <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    </div>
     <div class="search-box">
       <span style="color:var(--text-dim);font-size:13px;">🔍</span>
       <input type="text" id="searchInput" placeholder="Cari nama...">
     </div>
+    <button class="reset-btn" onclick="resetAllStatus()">↺ Reset</button>
   </div>
 
   <div id="contactList" class="contact-grid"></div>
 
-  <div class="empty-state" id="emptyState" style="display:none;">
-      <div class="icon">📋</div>
-      <p>Memuat data... <span class="loading-dots"></span></p>
+  <!-- Keterangan -->
+  <div style="text-align:center;padding:16px;color:var(--text-dim);font-size:12px;border-top:1px solid rgba(0,229,255,0.05);margin-bottom:30px;">
+    Klik <strong>Kirim WA</strong> &rarr; WA terbuka &rarr; Send &rarr; Klik <strong>✓ Terkirim</strong> untuk tandai
   </div>
 </div>
 
@@ -411,86 +434,86 @@ Maturnuwun 😁
 <div class="toast" id="toast"></div>
 
 <script>
+const LS_KEY = 'wa_blast_sent';
+
+// ========== Embedded Data ==========
+const EMBEDDED_DATA = [{"name":"Alisya Anindita Nurviola","phone":"6282133377191","sekolah":"SDII Al Abidin Surakarta"},{"name":"Dafinna Shidqiyya","phone":"6282336091571","sekolah":"SD Ummahat Simo"},{"name":"Alif Abdul Ghani","phone":"62811489793","sekolah":"SDII Al Abidin Surakarta"},{"name":"Almira Syakira Azahra","phone":"6289525695205","sekolah":"SDII Al Abidin Boyolali"},{"name":"Aqeela Syakira Nastiti","phone":"6281383632904","sekolah":"SDIT Insan Mulia"},{"name":"Arumi Azzahra Putri","phone":"6281225567727","sekolah":"SDII Al Abidin Boyolali"},{"name":"Asyfa Azzahra Putri","phone":"6282113940261","sekolah":"SDII Al Abidin Boyolali"},{"name":"Atqiya Salsabila Putri","phone":"6285647023452","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Aulia Rahma Agustin","phone":"6285758201076","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Aurel Anindya Putri","phone":"6281393058260","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Azalea Fathimah Putri","phone":"6289506202271","sekolah":"SDII Al Abidin Surakarta"},{"name":"Azaria Nur Fauziyyah","phone":"6285758201077","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Azka Sahasika Faiq","phone":"6287887234628","sekolah":"SDII Al Abidin Surakarta"},{"name":"Azura Nabila Putri","phone":"6281327144329","sekolah":"SDII Al Abidin Surakarta"},{"name":"Azura Syakila Zahra","phone":"6285791876550","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Bilqis Nur Hanifah","phone":"6285709970450","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Callysta Aisyah Putri","phone":"6282329394154","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Callysta Ayudhia Putri","phone":"6288225513257","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Calysta Aqilla Putri","phone":"6281999872927","sekolah":"SDII Al Abidin Surakarta"},{"name":"Cantika Putri Azzahra","phone":"6285647023451","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Chelsea Kayla Putri","phone":"6281339026070","sekolah":"SDIT Insan Mulia"},{"name":"Danisha Anindya Zahra","phone":"6287716707923","sekolah":"SDII Al Abidin Surakarta"},{"name":"Dian Aulia Pratiwi","phone":"6285647033454","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Faatihah Aqila Putri","phone":"6281230211150","sekolah":"SDII Al Abidin Surakarta"},{"name":"Fahranisa Agila Putri","phone":"6281328074976","sekolah":"SDII Al Abidin Surakarta"},{"name":"Faqih Muhammad Akbar","phone":"6285849564196","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Fathan Mubina Al Farizi","phone":"6282221093288","sekolah":"SDII Al Abidin Surakarta"},{"name":"Fathinah Azzahra Putri","phone":"6285771939258","sekolah":"SDII Al Abidin Surakarta"},{"name":"Fatimah Azzahra Putri","phone":"6285758201075","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Gathan Althaf Rizqullah","phone":"6282124469320","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hafidz Putra Ramadhan","phone":"6285223438108","sekolah":"SDII Al Abidin Boyolali"},{"name":"Hafiza Naura Azzahra","phone":"6282137497922","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hana Aulia Putri","phone":"6283143671802","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hanania Syakira Putri","phone":"6285626712491","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hasna Azzahra Putri","phone":"628111501568","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Hasna Nabila Putri","phone":"6281383632902","sekolah":"SDIT Insan Mulia"},{"name":"Hasya Kayla Putri","phone":"6285647023450","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Ibrahim Al Fatih","phone":"6281393404726","sekolah":"SDII Al Abidin Surakarta"},{"name":"Izzatul Jannah","phone":"6281815973375","sekolah":"SDII Al Abidin Surakarta"},{"name":"Kafka Ahmad Fawwaz","phone":"6285223438107","sekolah":"SDII Al Abidin Boyolali"},{"name":"Kalisa Adzkiya Putri","phone":"6281393404725","sekolah":"SDII Al Abidin Surakarta"},{"name":"Kamila Azzahra Putri","phone":"6281383632903","sekolah":"SDIT Insan Mulia"},{"name":"Kanza Azalia Putri","phone":"6285601187806","sekolah":"SDII Al Abidin Boyolali"},{"name":"Kayla Rahmadani Putri","phone":"6281383632901","sekolah":"SDIT Insan Mulia"},{"name":"Keenan Rizky Athaya","phone":"6285647023453","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Khalila Putri Nugraha","phone":"6285623711378","sekolah":"SDII Al Abidin Surakarta"},{"name":"Khanza Ayudhia Putri","phone":"6281393052531","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Kinanti Ayu Sekar Wangi","phone":"6285623711377","sekolah":"SDII Al Abidin Surakarta"},{"name":"Kinara Azzahra Putri","phone":"6281383632809","sekolah":"SDIT Insan Mulia"},{"name":"Labibah Nuha Azzahra","phone":"6288225822280","sekolah":"SDII Al Abidin Surakarta"},{"name":"Lathifah Azzahra Putri","phone":"6281316434317","sekolah":"SDII Al Abidin Surakarta"},{"name":"Lingga Aji Pangestu","phone":"6285223438109","sekolah":"SDII Al Abidin Boyolali"},{"name":"M. Arsyad Daffa Ataya","phone":"6285758201078","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"M. Aulia Wardhana M.","phone":"6281329946276","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Azka Azkia Faqih","phone":"628111501569","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"M. Fadhil Al Ghifari","phone":"6281327261485","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Fathir Alfaruq","phone":"6281393058261","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"M. Hafidz Al Falah","phone":"6285623760635","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Jibril Al Farizi","phone":"6281393781337","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Raffasya Ardhana","phone":"6282133652191","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Rizky Pratama","phone":"6282183626113","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Syauqi Azzam","phone":"6281320829752","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Ziyad Fawwaz","phone":"6285223438102","sekolah":"SDII Al Abidin Boyolali"},{"name":"Maheera Anindya Putri","phone":"6285623711376","sekolah":"SDII Al Abidin Surakarta"},{"name":"Malika Aulia Azzahra","phone":"6281383632898","sekolah":"SDIT Insan Mulia"},{"name":"Marcella Putri Pratiwi","phone":"6285758201074","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Muhammad Abrisam Abqary","phone":"6285223438105","sekolah":"SDII Al Abidin Boyolali"},{"name":"Muhammad Akhtar Rafasya","phone":"6285223438104","sekolah":"SDII Al Abidin Boyolali"},{"name":"Muhammad Al Fatih","phone":"6281393032189","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Al Gazali","phone":"6281327722452","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Al Ghozali","phone":"6281327722443","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Ananda Putra","phone":"6281397834205","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Arfan Al Ghifari","phone":"6283125020617","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Aryasatya P.","phone":"6281393404727","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Fadhil Abbas","phone":"6281990403405","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Faiz Al Farisi","phone":"6281329946277","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Fathir Andesta","phone":"6281329557815","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Hafidz Al Ghifari","phone":"6281393404728","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Irfan Al Ghifari","phone":"6282256501084","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Nabil Al Farizi","phone":"6281327722451","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Rafa Fadhilah","phone":"6282325411396","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Rafasya Athallah","phone":"6285223438106","sekolah":"SDII Al Abidin Boyolali"},{"name":"Muhammad Raffasya Pradipta","phone":"6281328395242","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Rizqy Abdillah","phone":"6282325411395","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Zaidan Abqary","phone":"6285223438101","sekolah":"SDII Al Abidin Boyolali"},{"name":"Nadira Aulia Putri","phone":"6285758201079","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nafeeza Adzkiya Putri","phone":"6285777171900","sekolah":"SDII Al Abidin Surakarta"},{"name":"Naira Zalfa Azzahra","phone":"6285623711375","sekolah":"SDII Al Abidin Surakarta"},{"name":"Najwa Azzahra Putri","phone":"6285647023455","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nasya Nabila Putri","phone":"6281383632900","sekolah":"SDIT Insan Mulia"},{"name":"Naura Azzahra Putri","phone":"6287773838550","sekolah":"SDII Al Abidin Surakarta"},{"name":"Nayla Azzahra Putri","phone":"6285758201073","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nayyara Azzahra Putri","phone":"6281328395243","sekolah":"SDII Al Abidin Surakarta"},{"name":"Nindya Aulia Putri","phone":"6281393058262","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nur Aini Azzahra","phone":"6282325411397","sekolah":"SDII Al Abidin Surakarta"},{"name":"Propita Annazwa","phone":"6281337195443","sekolah":"SDIT Insan Mulia"},{"name":"Qonita Azzahra Putri","phone":"6281393032188","sekolah":"SDII Al Abidin Surakarta"},{"name":"Rafa Andhika Pratama","phone":"6283632704717","sekolah":"SDII Al Abidin Boyolali"},{"name":"Rafa Ghazi Al Fatih","phone":"6281328074975","sekolah":"SDII Al Abidin Surakarta"},{"name":"Raisa Azzahra Putri","phone":"6285623711374","sekolah":"SDII Al Abidin Surakarta"},{"name":"Raisya Anindita Putri","phone":"6285758201072","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Rakha Bintang Pratama","phone":"6281327261484","sekolah":"SDII Al Abidin Surakarta"},{"name":"Rasya Aditya Pratama","phone":"6285223438103","sekolah":"SDII Al Abidin Boyolali"},{"name":"Razan Al Fatih","phone":"6281328395241","sekolah":"SDII Al Abidin Surakarta"},{"name":"Rizky Pratama Putra","phone":"6281393781338","sekolah":"SDII Al Abidin Surakarta"},{"name":"Roro Safira Putri","phone":"6285647023456","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Salsabila Putri Ramadhani","phone":"6281393032190","sekolah":"SDII Al Abidin Surakarta"},{"name":"Sania Azzahra Putri","phone":"6281383632905","sekolah":"SDIT Insan Mulia"},{"name":"Saskia Amalia Putri","phone":"6285758201071","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Shafiya Azzahra Putri","phone":"6281393404729","sekolah":"SDII Al Abidin Surakarta"},{"name":"Shanaya Azzahra Putri","phone":"6285623711379","sekolah":"SDII Al Abidin Surakarta"},{"name":"Shanum Azzahra Putri","phone":"6281245770350","sekolah":"SDII Al Abidin Surakarta"},{"name":"Sifa Azzahra Putri","phone":"6288211554842","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Sulthan Al Fatih","phone":"6281327722450","sekolah":"SDII Al Abidin Surakarta"},{"name":"Sulthan Athaya Ramadhan","phone":"6281316736567","sekolah":"SDII Al Abidin Surakarta"},{"name":"Syafa Azzahra Putri","phone":"6281524189759","sekolah":"SDII Al Abidin Surakarta"},{"name":"Syakira Aulia Putri","phone":"6289516833785","sekolah":"SDII Al Abidin Surakarta"},{"name":"Taqiyya Azzahra Putri","phone":"6285623711373","sekolah":"SDII Al Abidin Surakarta"},{"name":"Tsaqif Al Fatih","phone":"6281329557814","sekolah":"SDII Al Abidin Surakarta"},{"name":"Vanesa Putri Pratiwi","phone":"6285777171902","sekolah":"SDII Al Abidin Surakarta"},{"name":"Zahira Arthanarisa Maheswari","phone":"6281226210267","sekolah":"SDIT Nurul Islam 2 Tempurejo Ngawi"},{"name":"Muhammad Amzar Mahardika","phone":"6281328660658","sekolah":"SDIT Lukman Al Hakim"},{"name":"Areta Bernadine Ovania","phone":"6285790907006","sekolah":"SDN 1 Pabelan Kartasura"}];
+
 let contacts = [];
 
-// ========== SheetJS: Read Excel ==========
-function handleFile(file) {
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-
-      // Map columns (handle various Indonesian formats)
-      contacts = json.map(row => {
-        const name = row['NAMA SISWA'] || row['Nama Siswa'] || row['Nama'] || row['nama'] || row['Name'] || row['name'] || Object.values(row)[0] || '';
-        const phone = String(
-          row['No. Telp'] || row['No Telp'] || row['No Hp'] || row['No HP'] || row['no hp'] || row['no_hp'] || 
-          row['Phone'] || row['phone'] || row['Telepon'] || row['telp'] ||
-          row['WA'] || row['wa'] || row['WhatsApp'] || Object.values(row)[1] || ''
-        ).replace(/[^0-9]/g, '');
-        // Format phone: if starts with 0, replace with 62
-        const cleanPhone = phone.replace(/^0+/, '62');
-        return { 
-          name: String(name).trim(), 
-          phone: cleanPhone,
-          sekolah: row['ASAL SEKOLAH'] || row['Asal Sekolah'] || '',
-          gender: row['L/P'] || ''
-        };
-      }).filter(c => c.name && c.phone.length >= 10 && c.phone !== '62');
-
-      // Show preview
-      const preview = document.getElementById('previewData');
-      preview.textContent = `✓ ${contacts.length} kontak berhasil dimuat`;
-
-      renderContacts();
-    } catch(err) {
-      showToast('Gagal baca file: ' + err.message, true);
-    }
-  };
-  reader.readAsArrayBuffer(file);
+// ========== Status (localStorage) ==========
+function getSentSet() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
+  } catch { return new Set(); }
+}
+function saveSentSet(set) {
+  localStorage.setItem(LS_KEY, JSON.stringify([...set]));
+}
+function toggleStatus(name) {
+  const set = getSentSet();
+  if (set.has(name)) set.delete(name); else set.add(name);
+  saveSentSet(set);
+  renderContacts();
+}
+function markSent(name) {
+  const set = getSentSet();
+  set.add(name);
+  saveSentSet(set);
+  renderContacts();
+}
+function resetAllStatus() {
+  if (!confirm('Reset semua status ke Belum?')) return;
+  localStorage.removeItem(LS_KEY);
+  renderContacts();
+  showToast('Semua status direset');
 }
 
 // ========== Render ==========
 function renderContacts() {
+  const sentSet = getSentSet();
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
   const filtered = query ? contacts.filter(c => c.name.toLowerCase().includes(query)) : contacts;
 
   const list = document.getElementById('contactList');
-  const empty = document.getElementById('emptyState');
-  const stats = document.getElementById('statsBar');
   const total = document.getElementById('totalCount');
+  const sentCount = document.getElementById('sentCount');
+  const fill = document.getElementById('progressFill');
 
-  if (contacts.length === 0) {
-    list.innerHTML = '';
-    stats.style.display = 'none';
-    empty.style.display = 'block';
-    return;
-  }
-
-  stats.style.display = 'flex';
   total.textContent = contacts.length;
-  empty.style.display = 'none';
+  const sent = contacts.filter(c => sentSet.has(c.name)).length;
+  sentCount.textContent = sent;
+  fill.style.width = contacts.length ? (sent / contacts.length * 100) + '%' : '0%';
 
   if (filtered.length === 0) {
-    list.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>Tidak ditemukan</p></div>`;
+    list.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>${query ? 'Tidak ditemukan' : 'Memuat data...'}</p></div>`;
     return;
   }
 
   list.innerHTML = filtered.map(c => {
     const initial = c.name.charAt(0).toUpperCase();
+    const isSent = sentSet.has(c.name);
     const cleanPhone = c.phone.startsWith('62') ? c.phone : '62' + c.phone.replace(/^0+/, '');
+    const nameEsc = c.name.replace(/'/g, "\\'");
+    const sekolahEsc = (c.sekolah || '').replace(/'/g, "\\'");
     return `
-      <div class="contact-card" onclick="sendWA('${cleanPhone}', '${c.name.replace(/'/g, "\\'")}', '${(c.sekolah || '').replace(/'/g, "\\'")}')" title="Klik untuk kirim WA">
-        <div class="avatar">${initial}</div>
-        <div class="info">
-          <div class="name">${c.name}</div>
-          <div class="phone">+${cleanPhone}</div>
-          ${c.sekolah ? `<div class="sekolah">${c.sekolah}</div>` : ''}
+      <div class="contact-card${isSent ? ' sent' : ''}">
+        <div class="top-row">
+          <div class="avatar">${initial}</div>
+          <div class="info">
+            <div class="name">${c.name}</div>
+            ${c.sekolah ? `<div class="sekolah">${c.sekolah}</div>` : ''}
+            <div class="phone">+${cleanPhone}</div>
+          </div>
         </div>
-        <div class="wa-icon">💬</div>
+        <div class="actions">
+          <button class="btn-kirim" onclick="sendWA('${cleanPhone}', '${nameEsc}', '${sekolahEsc}')">
+            📤 Kirim WA
+          </button>
+          <span class="status-badge ${isSent ? 'terkirim' : 'belum'}" onclick="toggleStatus('${nameEsc}')">
+            ${isSent ? '✓ Terkirim' : '○ Belum'}
+          </span>
+        </div>
       </div>
     `;
   }).join('');
@@ -508,7 +531,7 @@ function sendWA(phone, name, sekolah) {
   const url = `https://wa.me/${phone}?text=${encoded}`;
 
   window.open(url, '_blank');
-  showToast(`✓ Membuka WA untuk ${name}`);
+  showToast('WA dibuka untuk ' + name);
 }
 
 // ========== Toast ==========
@@ -522,39 +545,12 @@ function showToast(msg, isError = false) {
   el._timer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-// ========== File input ==========
-document.getElementById('fileInput').addEventListener('change', function(e) {
-  if (e.target.files.length) handleFile(e.target.files[0]);
-});
-
-// ========== Drag & Drop ==========
-const dropZone = document.getElementById('dropZone');
-dropZone.addEventListener('dragover', e => {
-  e.preventDefault();
-  dropZone.classList.add('dragover');
-});
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('dragover');
-});
-dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('dragover');
-  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-});
-
 // ========== Search ==========
 document.getElementById('searchInput').addEventListener('input', renderContacts);
 
-// ========== Load embedded contacts data ==========
-// Auto-load from embedded JSON (from data MBG.xlsx - 137 kontak)
-const EMBEDDED_DATA = [{"name":"Alisya Anindita Nurviola","phone":"6282133377191","sekolah":"SDII Al Abidin Surakarta"},{"name":"Dafinna Shidqiyya","phone":"6282336091571","sekolah":"SD Ummahat Simo"},{"name":"Alif Abdul Ghani","phone":"62811489793","sekolah":"SDII Al Abidin Surakarta"},{"name":"Almira Syakira Azahra","phone":"6289525695205","sekolah":"SDII Al Abidin Boyolali"},{"name":"Aqeela Syakira Nastiti","phone":"6281383632904","sekolah":"SDIT Insan Mulia"},{"name":"Arumi Azzahra Putri","phone":"6281225567727","sekolah":"SDII Al Abidin Boyolali"},{"name":"Asyfa Azzahra Putri","phone":"6282113940261","sekolah":"SDII Al Abidin Boyolali"},{"name":"Atqiya Salsabila Putri","phone":"6285647023452","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Aulia Rahma Agustin","phone":"6285758201076","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Aurel Anindya Putri","phone":"6281393058260","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Azalea Fathimah Putri","phone":"6289506202271","sekolah":"SDII Al Abidin Surakarta"},{"name":"Azaria Nur Fauziyyah","phone":"6285758201077","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Azka Sahasika Faiq","phone":"6287887234628","sekolah":"SDII Al Abidin Surakarta"},{"name":"Azura Nabila Putri","phone":"6281327144329","sekolah":"SDII Al Abidin Surakarta"},{"name":"Azura Syakila Zahra","phone":"6285791876550","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Bilqis Nur Hanifah","phone":"6285709970450","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Callysta Aisyah Putri","phone":"6282329394154","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Callysta Ayudhia Putri","phone":"6288225513257","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Calysta Aqilla Putri","phone":"6281999872927","sekolah":"SDII Al Abidin Surakarta"},{"name":"Cantika Putri Azzahra","phone":"6285647023451","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Chelsea Kayla Putri","phone":"6281339026070","sekolah":"SDIT Insan Mulia"},{"name":"Danisha Anindya Zahra","phone":"6287716707923","sekolah":"SDII Al Abidin Surakarta"},{"name":"Dian Aulia Pratiwi","phone":"6285647033454","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Faatihah Aqila Putri","phone":"6281230211150","sekolah":"SDII Al Abidin Surakarta"},{"name":"Fahranisa Agila Putri","phone":"6281328074976","sekolah":"SDII Al Abidin Surakarta"},{"name":"Faqih Muhammad Akbar","phone":"6285849564196","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Fathan Mubina Al Farizi","phone":"6282221093288","sekolah":"SDII Al Abidin Surakarta"},{"name":"Fathinah Azzahra Putri","phone":"6285771939258","sekolah":"SDII Al Abidin Surakarta"},{"name":"Fatimah Azzahra Putri","phone":"6285758201075","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Gathan Althaf Rizqullah","phone":"6282124469320","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hafidz Putra Ramadhan","phone":"6285223438108","sekolah":"SDII Al Abidin Boyolali"},{"name":"Hafiza Naura Azzahra","phone":"6282137497922","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hana Aulia Putri","phone":"6283143671802","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hanania Syakira Putri","phone":"6285626712491","sekolah":"SDII Al Abidin Surakarta"},{"name":"Hasna Azzahra Putri","phone":"628111501568","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Hasna Nabila Putri","phone":"6281383632902","sekolah":"SDIT Insan Mulia"},{"name":"Hasya Kayla Putri","phone":"6285647023450","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Ibrahim Al Fatih","phone":"6281393404726","sekolah":"SDII Al Abidin Surakarta"},{"name":"Izzatul Jannah","phone":"6281815973375","sekolah":"SDII Al Abidin Surakarta"},{"name":"Kafka Ahmad Fawwaz","phone":"6285223438107","sekolah":"SDII Al Abidin Boyolali"},{"name":"Kalisa Adzkiya Putri","phone":"6281393404725","sekolah":"SDII Al Abidin Surakarta"},{"name":"Kamila Azzahra Putri","phone":"6281383632903","sekolah":"SDIT Insan Mulia"},{"name":"Kanza Azalia Putri","phone":"6285601187806","sekolah":"SDII Al Abidin Boyolali"},{"name":"Kayla Rahmadani Putri","phone":"6281383632901","sekolah":"SDIT Insan Mulia"},{"name":"Keenan Rizky Athaya","phone":"6285647023453","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Khalila Putri Nugraha","phone":"6285623711378","sekolah":"SDII Al Abidin Surakarta"},{"name":"Khanza Ayudhia Putri","phone":"6281393052531","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Kinanti Ayu Sekar Wangi","phone":"6285623711377","sekolah":"SDII Al Abidin Surakarta"},{"name":"Kinara Azzahra Putri","phone":"6281383632809","sekolah":"SDIT Insan Mulia"},{"name":"Labibah Nuha Azzahra","phone":"6288225822280","sekolah":"SDII Al Abidin Surakarta"},{"name":"Lathifah Azzahra Putri","phone":"6281316434317","sekolah":"SDII Al Abidin Surakarta"},{"name":"Lingga Aji Pangestu","phone":"6285223438109","sekolah":"SDII Al Abidin Boyolali"},{"name":"M. Arsyad Daffa Ataya","phone":"6285758201078","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"M. Aulia Wardhana M.","phone":"6281329946276","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Azka Azkia Faqih","phone":"628111501569","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"M. Fadhil Al Ghifari","phone":"6281327261485","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Fathir Alfaruq","phone":"6281393058261","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"M. Hafidz Al Falah","phone":"6285623760635","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Jibril Al Farizi","phone":"6281393781337","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Raffasya Ardhana","phone":"6282133652191","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Rizky Pratama","phone":"6282183626113","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Syauqi Azzam","phone":"6281320829752","sekolah":"SDII Al Abidin Surakarta"},{"name":"M. Ziyad Fawwaz","phone":"6285223438102","sekolah":"SDII Al Abidin Boyolali"},{"name":"Maheera Anindya Putri","phone":"6285623711376","sekolah":"SDII Al Abidin Surakarta"},{"name":"Malika Aulia Azzahra","phone":"6281383632898","sekolah":"SDIT Insan Mulia"},{"name":"Marcella Putri Pratiwi","phone":"6285758201074","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Muhammad Abrisam Abqary","phone":"6285223438105","sekolah":"SDII Al Abidin Boyolali"},{"name":"Muhammad Akhtar Rafasya","phone":"6285223438104","sekolah":"SDII Al Abidin Boyolali"},{"name":"Muhammad Al Fatih","phone":"6281393032189","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Al Gazali","phone":"6281327722452","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Al Ghozali","phone":"6281327722443","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Ananda Putra","phone":"6281397834205","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Arfan Al Ghifari","phone":"6283125020617","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Aryasatya P.","phone":"6281393404727","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Fadhil Abbas","phone":"6281990403405","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Faiz Al Farisi","phone":"6281329946277","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Fathir Andesta","phone":"6281329557815","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Hafidz Al Ghifari","phone":"6281393404728","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Irfan Al Ghifari","phone":"6282256501084","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Nabil Al Farizi","phone":"6281327722451","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Rafa Fadhilah","phone":"6282325411396","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Rafasya Athallah","phone":"6285223438106","sekolah":"SDII Al Abidin Boyolali"},{"name":"Muhammad Raffasya Pradipta","phone":"6281328395242","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Rizqy Abdillah","phone":"6282325411395","sekolah":"SDII Al Abidin Surakarta"},{"name":"Muhammad Zaidan Abqary","phone":"6285223438101","sekolah":"SDII Al Abidin Boyolali"},{"name":"Nadira Aulia Putri","phone":"6285758201079","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nafeeza Adzkiya Putri","phone":"6285777171900","sekolah":"SDII Al Abidin Surakarta"},{"name":"Naira Zalfa Azzahra","phone":"6285623711375","sekolah":"SDII Al Abidin Surakarta"},{"name":"Najwa Azzahra Putri","phone":"6285647023455","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nasya Nabila Putri","phone":"6281383632900","sekolah":"SDIT Insan Mulia"},{"name":"Naura Azzahra Putri","phone":"6287773838550","sekolah":"SDII Al Abidin Surakarta"},{"name":"Nayla Azzahra Putri","phone":"6285758201073","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nayyara Azzahra Putri","phone":"6281328395243","sekolah":"SDII Al Abidin Surakarta"},{"name":"Nindya Aulia Putri","phone":"6281393058262","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Nur Aini Azzahra","phone":"6282325411397","sekolah":"SDII Al Abidin Surakarta"},{"name":"Propita Annazwa","phone":"6281337195443","sekolah":"SDIT Insan Mulia"},{"name":"Qonita Azzahra Putri","phone":"6281393032188","sekolah":"SDII Al Abidin Surakarta"},{"name":"Rafa Andhika Pratama","phone":"6283632704717","sekolah":"SDII Al Abidin Boyolali"},{"name":"Rafa Ghazi Al Fatih","phone":"6281328074975","sekolah":"SDII Al Abidin Surakarta"},{"name":"Raisa Azzahra Putri","phone":"6285623711374","sekolah":"SDII Al Abidin Surakarta"},{"name":"Raisya Anindita Putri","phone":"6285758201072","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Rakha Bintang Pratama","phone":"6281327261484","sekolah":"SDII Al Abidin Surakarta"},{"name":"Rasya Aditya Pratama","phone":"6285223438103","sekolah":"SDII Al Abidin Boyolali"},{"name":"Razan Al Fatih","phone":"6281328395241","sekolah":"SDII Al Abidin Surakarta"},{"name":"Rizky Pratama Putra","phone":"6281393781338","sekolah":"SDII Al Abidin Surakarta"},{"name":"Roro Safira Putri","phone":"6285647023456","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Salsabila Putri Ramadhani","phone":"6281393032190","sekolah":"SDII Al Abidin Surakarta"},{"name":"Sania Azzahra Putri","phone":"6281383632905","sekolah":"SDIT Insan Mulia"},{"name":"Saskia Amalia Putri","phone":"6285758201071","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Shafiya Azzahra Putri","phone":"6281393404729","sekolah":"SDII Al Abidin Surakarta"},{"name":"Shanaya Azzahra Putri","phone":"6285623711379","sekolah":"SDII Al Abidin Surakarta"},{"name":"Shanum Azzahra Putri","phone":"6281245770350","sekolah":"SDII Al Abidin Surakarta"},{"name":"Sifa Azzahra Putri","phone":"6288211554842","sekolah":"SD Muhammadiyah PK Boyolali"},{"name":"Sulthan Al Fatih","phone":"6281327722450","sekolah":"SDII Al Abidin Surakarta"},{"name":"Sulthan Athaya Ramadhan","phone":"6281316736567","sekolah":"SDII Al Abidin Surakarta"},{"name":"Syafa Azzahra Putri","phone":"6281524189759","sekolah":"SDII Al Abidin Surakarta"},{"name":"Syakira Aulia Putri","phone":"6289516833785","sekolah":"SDII Al Abidin Surakarta"},{"name":"Taqiyya Azzahra Putri","phone":"6285623711373","sekolah":"SDII Al Abidin Surakarta"},{"name":"Tsaqif Al Fatih","phone":"6281329557814","sekolah":"SDII Al Abidin Surakarta"},{"name":"Vanesa Putri Pratiwi","phone":"6285777171902","sekolah":"SDII Al Abidin Surakarta"},{"name":"Zahira Arthanarisa Maheswari","phone":"6281226210267","sekolah":"SDIT Nurul Islam 2 Tempurejo Ngawi"},{"name":"Muhammad Amzar Mahardika","phone":"6281328660658","sekolah":"SDIT Lukman Al Hakim"},{"name":"Areta Bernadine Ovania","phone":"6285790907006","sekolah":"SDN 1 Pabelan Kartasura"}];
-
-// Auto-load embedded data on page load
+// ========== Init ==========
 contacts = EMBEDDED_DATA;
-document.addEventListener('DOMContentLoaded', () => {
-  renderContacts();
-  document.getElementById('previewData').textContent = '\u2713 ' + contacts.length + ' kontak dari data MBG';
-});
+renderContacts();
 </script>
 </body>
 </html>
