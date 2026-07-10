@@ -130,7 +130,7 @@ header p { color:#0B1220cc; font-size:14px; }
 
 <header>
   <h1>WA Blast</h1>
-  <p>Update Identitas Rapor — 137 siswa</p>
+  <p>Sosialisasi MPLS — SMP ABBS Surakarta</p>
 </header>
 
 <div class="container">
@@ -138,26 +138,39 @@ header p { color:#0B1220cc; font-size:14px; }
   <div class="progress-section">
     <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
     <div class="progress-text">
-      Terkirim: <span class="num" id="sentCount">0</span> / <span class="num">137</span>
+      Terkirim: <span class="num" id="sentCount">0</span> / <span class="num" id="totalNum">0</span>
       <button class="btn-reset-all" onclick="resetAllStatus()" style="margin-left:12px;">↺ Reset</button>
     </div>
   </div>
 
   <div class="template-section">
     <label>Template Pesan (gunakan {nama})</label>
-    <textarea id="templateMsg">*UPDATE IDENTITAS RAPOR* 📋
+    <textarea id="templateMsg">📢 *INFORMASI SEKOLAH*
 
-Yth. Bapak/Ibu Wali {nama}
+🌟 *Assalamu'alaikum warahmatullahi wabarakatuh*
 
-Dengan hormat,
-Kami menginformasikan bahwa rapor semester ini telah tersedia. Mohon untuk mengupdate identitas data putra/putri Bapak/Ibu melalui link berikut:
+Ayah Bunda yang dirahmati Allah SWT
 
-🔗 https://bit.ly/IDENTITASRAPORBARU
+Sehubungan dengan dimulainya  tahun ajaran baru, kami mengundang Ayah/Bunda untuk mengikuti *Sosialisasi MPLS Siswa Kelas 7 SMP ABBS Surakarta*.
 
-Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.
+📅 *Hari/Tanggal* : Sabtu, 11 Juli 2026
+🕗 *Waktu*  : 09.00 WIB –selesai
+💻 *Media*  : Zoom Meeting
 
-Wassalamu'alaikum warahmatullahi wabarakatuh
-🙏</textarea>
+🔗 *Link Zoom*
+https://telkomsel.zoom.us/j/94233978712?pwd=luLFwMAfoRmSLvHvgiI4KdYiuvMHoX.1
+
+🆔 *Meeting ID* : 942 3397 8712
+🔑 *Passcode* : bismillah
+
+
+✨*Mohon hadir 15 menit sebelum acara dimulai agar seluruh informasi penting terkait sosialisasi kegiatan MPLS dapat diterima dengan baik* ✨
+
+Terima kasih atas perhatian Ayah, Bunda, serta Ananda.
+
+*Wassalamu'alaikum warahmatullahi wabarakatuh.* 🙏🏻
+
+**Panitia MPLS SMP ABBS Surakarta**</textarea>
     <div class="template-actions">
       <button class="primary" onclick="sendAllPending()">📤 Kirim ke Semua (Belum)</button>
       <button onclick="previewTemplate()">👁 Preview</button>
@@ -242,7 +255,7 @@ function previewTemplate() {
 }
 
 function resetDefaultTemplate() {
-  document.getElementById('templateMsg').value = '*UPDATE IDENTITAS RAPOR* 📋\n\nYth. Bapak/Ibu Wali {nama}\n\nDengan hormat,\nKami menginformasikan bahwa rapor semester ini telah tersedia. Mohon untuk mengupdate identitas data putra/putri Bapak/Ibu melalui link berikut:\n\n🔗 https://bit.ly/IDENTITASRAPORBARU\n\nAtas perhatian dan kerjasamanya, kami ucapkan terima kasih.\n\nWassalamu\'alaikum warahmatullahi wabarakatuh\n🙏';
+  document.getElementById('templateMsg').value = '📢 *INFORMASI SEKOLAH*\n\n🌟 *Assalamu\'alaikum warahmatullahi wabarakatuh*\n\nAyah Bunda yang dirahmati Allah SWT\n\nSehubungan dengan dimulainya  tahun ajaran baru, kami mengundang Ayah/Bunda untuk mengikuti *Sosialisasi MPLS Siswa Kelas 7 SMP ABBS Surakarta*.\n\n📅 *Hari/Tanggal* : Sabtu, 11 Juli 2026\n🕗 *Waktu*  : 09.00 WIB –selesai\n💻 *Media*  : Zoom Meeting\n\n🔗 *Link Zoom*\nhttps://telkomsel.zoom.us/j/94233978712?pwd=luLFwMAfoRmSLvHvgiI4KdYiuvMHoX.1\n\n🆔 *Meeting ID* : 942 3397 8712\n🔑 *Passcode* : bismillah\n\n\n✨*Mohon hadir 15 menit sebelum acara dimulai agar seluruh informasi penting terkait sosialisasi kegiatan MPLS dapat diterima dengan baik* ✨\n\nTerima kasih atas perhatian Ayah, Bunda, serta Ananda.\n\n*Wassalamu\'alaikum warahmatullahi wabarakatuh.* 🙏🏻\n\n**Panitia MPLS SMP ABBS Surakarta**';
   showToast('↻ Template direset');
 }
 
@@ -278,6 +291,7 @@ function renderList() {
   var pct = DATA.length > 0 ? (sent / DATA.length * 100) + '%' : '0%';
   document.getElementById('progressFill').style.width = pct;
   document.getElementById('totalCount').textContent = filtered.length;
+  document.getElementById('totalNum').textContent = DATA.length;
 
   var html = '';
   for (var i = 0; i < filtered.length; i++) {
